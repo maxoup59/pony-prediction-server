@@ -32,7 +32,6 @@ void Server::incomingConnection(qintptr socketDescriptor)
 void Server::onDeconnection(SocketThread * currentThread)
 {
     std::cout << "Deconnection" << std::endl;
-   //currentThread->deleteLater();
     listSocketThread.removeOne(currentThread);
     std::cout << listSocketThread.size()
     << " Active Connection"

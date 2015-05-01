@@ -38,12 +38,7 @@ QString SocketThread::read()
 bool SocketThread::write(QString answer)
 {
     QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-    out << (quint16)0;
-    out << answer;
-    out.device()->seek(0);
-    out << (quint16)(block.size() - sizeof(quint16));
+    block.append(answer);
     if(socketClient->write(block)!= -1)
         return true;
     else

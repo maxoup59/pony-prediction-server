@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     Server server;
-    if (!server.listen(QHostAddress::Any,50002)) {
+    if (!server.listen(QHostAddress::Any,50000)) {
         qDebug() << "Unable to start the server: " << server.errorString();
     }
     return a.exec();

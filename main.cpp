@@ -9,10 +9,10 @@ int main(int argc, char *argv[])
     Server server;
     Util::init(&a,&server);
     Util::catchUnixSignals({SIGQUIT, SIGINT, SIGTERM, SIGHUP});
-    if (!server.listen(QHostAddress::Any,50000)) {
+    if (!server.listen(QHostAddress::Any,Util::getLineFromConf("port").toInt())) {
         Util::log("Unable to start the server: " + server.errorString());
         return 0;
     }
-    Util::log("Server started ! ");
+    Util::log("Server started on : " + QString::number(server.serverPort()) + " !");
     return a.exec();
 }

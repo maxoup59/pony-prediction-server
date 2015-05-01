@@ -46,12 +46,10 @@ void Util::log(QString message)
 
 void Util::catchUnixSignals(const std::vector<int>& quitSignals,
                             const std::vector<int>& ignoreSignals) {
-
     auto handler = [](int sig) ->void {
         Util::app->quit();
         server->close();
     };
-
     for ( int sig : ignoreSignals )
         signal(sig, SIG_IGN);
     for ( int sig : quitSignals )

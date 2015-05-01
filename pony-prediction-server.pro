@@ -25,3 +25,6 @@ HEADERS += \
     core/server.hpp \
     core/socket-thread.hpp \
     core/util.hpp
+
+DISTFILES += \
+    config.xml

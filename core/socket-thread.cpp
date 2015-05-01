@@ -8,7 +8,7 @@ SocketThread::SocketThread(int socketDescriptor):
 
 SocketThread::~SocketThread()
 {
-
+    emit deconnection(this);
 }
 
 void SocketThread::run()
@@ -27,7 +27,7 @@ void SocketThread::readyRead()
 void SocketThread::disconnected()
 {
     socketClient->deleteLater();
-    exit(0);
+    quit();
 }
 
 QString SocketThread::read()

@@ -13,6 +13,8 @@ public:
 public slots:
     void readyRead();
     void disconnected();
+signals:
+    void deconnection(SocketThread*);
 private:
     QTcpSocket *socketClient;
     bool write(QString answer);

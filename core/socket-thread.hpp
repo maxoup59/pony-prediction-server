@@ -12,13 +12,14 @@ public:
     void run() Q_DECL_OVERRIDE;
 public slots:
     void readyRead();
-    void disconnected();
+    void disconnect();
 signals:
     void disconnection(SocketThread*);
 private:
     QTcpSocket *socketClient;
     bool write(QString answer);
     QString read();
+    bool logged;
 };
 
 #endif // SOCKETTHREAD_H

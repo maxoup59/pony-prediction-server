@@ -2,13 +2,14 @@
 #include "qendian.h"
 #include "core/util.hpp"
 SocketThread::SocketThread(int socketDescriptor):
-    socketClient(new QTcpSocket())
+    socketClient(new QTcpSocket()),logged(false)
 {
     socketClient->setSocketDescriptor(socketDescriptor);
 }
 
 SocketThread::~SocketThread()
 {
+    socketClient->deleteLater();
     emit disconnection(this);
 }
 
@@ -16,26 +17,40 @@ void SocketThread::run()
 {
     connect(socketClient, SIGNAL(readyRead()), this, SLOT(readyRead()),
             Qt::DirectConnection);
-    connect(socketClient, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(socketClient, SIGNAL(disconnected()), this, SLOT(disconnect()));
     exec();
 }
 
 void SocketThread::readyRead()
 {
     QString request = read();
-    if (request == "QUIT")
+    if(logged)
     {
-        disconnected();
+        if(request == "HEY")
+            write("Coucou");
     }
     else
     {
-        write("999");
+        if (request == "QUIT")
+        {
+            write("Disconnected");
+            disconnect();
+        }
+        else if(request.startsWith("LOG"))
+        {
+            logged = true;
+            write("Logged");
+        }
+        else
+        {
+            write("999");
+        }
     }
 }
 
-void SocketThread::disconnected()
+void SocketThread::disconnect()
 {
-    socketClient->deleteLater();
+    emit disconnection(this);
     quit();
 }
 

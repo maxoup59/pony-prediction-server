@@ -10,7 +10,9 @@ Server::~Server()
 {
     for(int i = 0 ; i < listSocketThread.size() ; i++)
     {
-        listSocketThread[i]->deleteLater();
+        listSocketThread[i]->quit();
+        while (listSocketThread[i]->isRunning());
+        delete listSocketThread[i];
     }
 }
 

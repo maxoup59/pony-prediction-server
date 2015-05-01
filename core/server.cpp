@@ -1,5 +1,6 @@
 #include "server.hpp"
 #include <iostream>
+#include "core/util.hpp"
 Server::Server()
 {
 
@@ -15,8 +16,7 @@ Server::~Server()
 
 void Server::incomingConnection(qintptr socketDescriptor)
 {
-    std::cout << "Incoming connection"
-              << std::endl;
+    Util::log("Incoming Connection");
     SocketThread *socketThread = new SocketThread(socketDescriptor);
     QObject::connect(socketThread, SIGNAL(finished())
                      ,socketThread, SLOT(deleteLater()));
@@ -24,17 +24,13 @@ void Server::incomingConnection(qintptr socketDescriptor)
                      ,this,SLOT(onDeconnection(SocketThread*)));
     listSocketThread.push_back(socketThread);
     socketThread->start();
-    std::cout << listSocketThread.size()
-    << " Active Connection"
-    << std::endl;
+    Util::log(QString::number(listSocketThread.size()) + " Active Connection");
 }
 
 void Server::onDeconnection(SocketThread * currentThread)
 {
-    std::cout << "Deconnection" << std::endl;
+    Util::log("Deconnection");
     listSocketThread.removeOne(currentThread);
-    std::cout << listSocketThread.size()
-    << " Active Connection"
-    << std::endl;
+    Util::log(QString::number(listSocketThread.size()) + " Active Connection");
 }
 

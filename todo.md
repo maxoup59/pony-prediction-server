@@ -1,2 +1,2 @@
 # TODO 
-[ ] Catch CTRL+C to shutdown properly the server
+- [ ] Catch CTRL+C to shutdown properly the server

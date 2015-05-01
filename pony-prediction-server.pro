@@ -18,8 +18,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     core/server.cpp \
-    core/socket-thread.cpp
+    core/socket-thread.cpp \
+    core/util.cpp
 
 HEADERS += \
     core/server.hpp \
-    core/socket-thread.hpp
+    core/socket-thread.hpp \
+    core/util.hpp

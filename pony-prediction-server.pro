@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core network
+QT       += core network sql
 
 QT       -= gui
 
@@ -19,12 +19,14 @@ TEMPLATE = app
 SOURCES += main.cpp \
     core/server.cpp \
     core/socket-thread.cpp \
-    core/util.cpp
+    core/util.cpp \
+    core/databasemanager.cpp
 
 HEADERS += \
     core/server.hpp \
     core/socket-thread.hpp \
-    core/util.hpp
+    core/util.hpp \
+    core/databasemanager.hpp
 
 DISTFILES += \
     config.xml

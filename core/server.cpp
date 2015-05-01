@@ -31,7 +31,7 @@ void Server::incomingConnection(qintptr socketDescriptor)
 
 void Server::onDisconnection(SocketThread * currentThread)
 {
-    Util::log("Disconnection");
+    Util::log("Outgoing connection");
     listSocketThread.removeOne(currentThread);
     Util::log(QString::number(listSocketThread.size()) + " Active Connection");
 }

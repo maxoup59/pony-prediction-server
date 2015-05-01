@@ -14,6 +14,7 @@ public:
 protected:
     void incomingConnection(qintptr socketDescriptor) Q_DECL_OVERRIDE;
     QVector<SocketThread*> listSocketThread;
+
 public slots:
     void onDisconnection(SocketThread *);
 };

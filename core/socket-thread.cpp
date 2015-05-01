@@ -1,5 +1,6 @@
 #include "socket-thread.hpp"
 #include "qendian.h"
+#include "core/util.hpp"
 SocketThread::SocketThread(int socketDescriptor):
     socketClient(new QTcpSocket())
 {
@@ -8,7 +9,7 @@ SocketThread::SocketThread(int socketDescriptor):
 
 SocketThread::~SocketThread()
 {
-    emit deconnection(this);
+    emit disconnection(this);
 }
 
 void SocketThread::run()
@@ -21,7 +22,15 @@ void SocketThread::run()
 
 void SocketThread::readyRead()
 {
-    write(read());
+    QString request = read();
+    if (request == "QUIT")
+    {
+        disconnected();
+    }
+    else
+    {
+        write("999");
+    }
 }
 
 void SocketThread::disconnected()
@@ -32,7 +41,9 @@ void SocketThread::disconnected()
 
 QString SocketThread::read()
 {
-    return QString(socketClient->readAll());
+    QString request(socketClient->readAll());
+    request = request.left(request.size()-2);
+    return request;
 }
 
 bool SocketThread::write(QString answer)

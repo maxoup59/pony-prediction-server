@@ -20,16 +20,16 @@ void Server::incomingConnection(qintptr socketDescriptor)
     SocketThread *socketThread = new SocketThread(socketDescriptor);
     QObject::connect(socketThread, SIGNAL(finished())
                      ,socketThread, SLOT(deleteLater()));
-    QObject::connect(socketThread,SIGNAL(deconnection(SocketThread*))
-                     ,this,SLOT(onDeconnection(SocketThread*)));
+    QObject::connect(socketThread,SIGNAL(disconnection(SocketThread*))
+                     ,this,SLOT(onDisconnection(SocketThread*)));
     listSocketThread.push_back(socketThread);
     socketThread->start();
     Util::log(QString::number(listSocketThread.size()) + " Active Connection");
 }
 
-void Server::onDeconnection(SocketThread * currentThread)
+void Server::onDisconnection(SocketThread * currentThread)
 {
-    Util::log("Deconnection");
+    Util::log("Disconnection");
     listSocketThread.removeOne(currentThread);
     Util::log(QString::number(listSocketThread.size()) + " Active Connection");
 }

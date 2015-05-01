@@ -15,7 +15,7 @@ protected:
     void incomingConnection(qintptr socketDescriptor) Q_DECL_OVERRIDE;
     QVector<SocketThread*> listSocketThread;
 public slots:
-    void onDeconnection(SocketThread *);
+    void onDisconnection(SocketThread *);
 };
 
 #endif // SERVER_H

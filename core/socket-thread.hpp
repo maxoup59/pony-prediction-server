@@ -14,7 +14,7 @@ public slots:
     void readyRead();
     void disconnected();
 signals:
-    void deconnection(SocketThread*);
+    void disconnection(SocketThread*);
 private:
     QTcpSocket *socketClient;
     bool write(QString answer);

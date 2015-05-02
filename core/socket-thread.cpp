@@ -67,7 +67,7 @@ void SocketThread::readyRead()
 
 void SocketThread::disconnect()
 {
-    emit disconnection(this);
+    //emit disconnection(this);
     quit();
 }
 

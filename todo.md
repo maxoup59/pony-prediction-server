@@ -11,5 +11,9 @@
     - [x] Implement userCheck
     - [ ] get/save brain
     - [ ] getData
+    - [ ] QODBC instead of QMYSQL
+- [ ] parameter at start to choose the location of the config files ArgV or ArgC 
+- [ ] Fix warning 
+
 
             

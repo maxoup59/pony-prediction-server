@@ -14,6 +14,7 @@ Server::~Server()
         while (listSocketThread[i]->isRunning());
         delete listSocketThread[i];
     }
+    Util::log("Server successfully close");
 }
 
 void Server::incomingConnection(qintptr socketDescriptor)

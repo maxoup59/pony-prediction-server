@@ -48,7 +48,7 @@ void SocketThread::readyRead()
             QStringList split = request.split(" ");
             if(split.length() == 3)
             {
-                QUrl url("http://localhost/passwordcheck.php");
+                QUrl url("http://ponyprediction.loicbourgois.com/passwordcheck.php");
                 QUrlQuery postData;
                 postData.addQueryItem("hash", databaseManager->getUserHash(split[1]));
                 postData.addQueryItem("password", split[2]);
@@ -75,13 +75,18 @@ void SocketThread::replyFinished(QNetworkReply * reply)
 {
     //Contains pour le moment : /n en trop je pense
     // A remplacer par == après test
-    if(reply->readAll().contains("true"))
+    QString answer = reply->readAll();
+    if(answer.contains("true"))
     {
         write("LOGGED");
     }
-    else
+    else if(answer.contains("false"))
     {
         write("BAD USERNAME OR PASSWORD");
+    }
+    else
+    {
+        write("Unknown error");
     }
 }
 

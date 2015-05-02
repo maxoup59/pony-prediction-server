@@ -6,6 +6,7 @@
 #include <QXmlStreamReader>
 #include <QCoreApplication>
 #include <signal.h>
+#include <QDir>
 
 Server * Util::server = nullptr;
 QCoreApplication *Util::app = nullptr;
@@ -16,7 +17,8 @@ QString Util::getLineFromConf(const QString &id)
     QFile file("./conf.xml");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << "Can not find the conf file";
+        qDebug() << "Can not find the conf file in : " + QDir::currentPath();
+
         return QString();
     }
     QXmlStreamReader xml(&file);

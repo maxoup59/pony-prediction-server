@@ -2,5 +2,6 @@
 <conf>
     <username>username</username>
     <password>password</password>
+    <databaseName>databaseName</databaseName>
     <port>50000</port>
 </conf>

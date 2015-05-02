@@ -1,7 +1,7 @@
 #include "socket-thread.hpp"
 #include "qendian.h"
 #include "core/util.hpp"
-#include <QURL>
+#include <QUrl>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrlQuery>

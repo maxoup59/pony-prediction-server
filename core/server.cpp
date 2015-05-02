@@ -19,7 +19,8 @@ Server::~Server()
 void Server::incomingConnection(qintptr socketDescriptor)
 {
     Util::log("Incoming Connection");
-    SocketThread *socketThread = new SocketThread(socketDescriptor);
+    SocketThread *socketThread = new SocketThread(socketDescriptor
+                                                  ,&databaseManager);
     QObject::connect(socketThread, SIGNAL(finished())
                      ,socketThread, SLOT(deleteLater()));
     QObject::connect(socketThread,SIGNAL(disconnection(SocketThread*))

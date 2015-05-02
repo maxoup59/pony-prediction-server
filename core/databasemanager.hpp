@@ -10,6 +10,8 @@ class DatabaseManager
 public:
     DatabaseManager();
     ~DatabaseManager();
+    bool checkUser(QString username,QString password);
+    bool isConnected(){return connected;}
 private:
     bool connected;
     bool connect();

@@ -3,7 +3,11 @@
 - [x] Catch CTRL+C to shutdown properly the server
 - [x] Config.xml
 - [ ] Write communication protocol
-- [ ] Implement log in the server app with log from DB ( identifaction )
-- [ ] Encryption log in
-- [ ] Implement connection to the DB
+- [x] Implement log in the server app with log from DB ( identification )
+- [ ] Encryption communication between client and server
 - [x] Work on a way to shutdown properly the server
+- [ ] Database
+    - [x] Implement connection to the DB
+    - [x] Implement userCheck
+
+            

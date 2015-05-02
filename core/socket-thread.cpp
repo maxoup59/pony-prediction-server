@@ -1,10 +1,12 @@
 #include "socket-thread.hpp"
 #include "qendian.h"
 #include "core/util.hpp"
-SocketThread::SocketThread(int socketDescriptor):
+SocketThread::SocketThread(int socketDescriptor,
+                           DatabaseManager * pDatabaseManager):
     socketClient(new QTcpSocket()),logged(false)
 {
     socketClient->setSocketDescriptor(socketDescriptor);
+    databaseManager = pDatabaseManager;
 }
 
 SocketThread::~SocketThread()
@@ -33,13 +35,22 @@ void SocketThread::readyRead()
     {
         if (request == "QUIT")
         {
-            write("Disconnected");
+            write("DISCONNECTED");
             disconnect();
         }
         else if(request.startsWith("LOG"))
         {
-            logged = true;
-            write("Logged");
+            QStringList split = request.split(" ");
+            if(split.length() == 3 &&
+                    databaseManager->checkUser(split[1],split[2]))
+            {
+                logged = true;
+                write("LOGGED");
+            }
+            else
+            {
+                write("Bad login or password");
+            }
         }
         else
         {

@@ -1,6 +1,7 @@
 #include "databasemanager.hpp"
 #include "core/util.hpp"
 #include <QSqlRecord>
+
 DatabaseManager::DatabaseManager():
     connected(false),
     databaseName(Util::getLineFromConf("databaseName")),
@@ -14,35 +15,32 @@ DatabaseManager::~DatabaseManager()
 
 }
 
-bool DatabaseManager::checkUser(QString username, QString hash)
+QString DatabaseManager::getUserHash(QString username)
 {
     if(connected)
-    {
-        QSqlQuery query;
-        QString statement = " SELECT COUNT(*) nb FROM users where username='"
-                + username
-                + "' AND hash='"
-                + hash
-                + "';";
-        query.prepare(statement);
-        if(query.exec())
         {
-            while(query.next())
+            QSqlQuery query;
+            QString statement = "Select hash from users where username ='"
+                                + username
+                                + "';";
+            query.prepare(statement);
+            if(query.exec())
             {
-                QSqlRecord record = query.record();
-                if(record.value(record.indexOf("nb")).toInt() != 0)
+                while(query.next())
                 {
-                    Util::log("User " + username + " just logged in");
-                    return true;
+                    QSqlRecord record = query.record();
+                    if(!record.value(record.indexOf("hash")).isNull())
+                    {
+                        return record.value(record.indexOf("hash")).toString();
+                    }
                 }
             }
         }
-    }
-    else
-    {
-        Util::log("Not connected to the database");
-    }
-    return false;
+        else
+        {
+            Util::log("Not connected to the database");
+        }
+    return QString();
 }
 
 bool DatabaseManager::connect()

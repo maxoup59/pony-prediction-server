@@ -1,9 +1,14 @@
 #include "socket-thread.hpp"
 #include "qendian.h"
 #include "core/util.hpp"
+#include <QURL>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QUrlQuery>
 SocketThread::SocketThread(int socketDescriptor,
                            DatabaseManager * pDatabaseManager):
     socketClient(new QTcpSocket()),logged(false)
+  ,downloadManager(new QNetworkAccessManager())
 {
     socketClient->setSocketDescriptor(socketDescriptor);
     databaseManager = pDatabaseManager;
@@ -41,15 +46,16 @@ void SocketThread::readyRead()
         else if(request.startsWith("LOG"))
         {
             QStringList split = request.split(" ");
-            if(split.length() == 3 &&
-                    databaseManager->checkUser(split[1],split[2]))
+            if(split.length() == 3)
             {
-                logged = true;
-                write("LOGGED");
-            }
-            else
-            {
-                write("Bad login or password");
+                QUrl url("http://localhost/passwordcheck.php");
+                QUrlQuery postData;
+                postData.addQueryItem("hash", databaseManager->getUserHash(split[1]));
+                postData.addQueryItem("password", split[2]);
+                connect(downloadManager, SIGNAL(finished(QNetworkReply*)),
+                        this, SLOT(replyFinished(QNetworkReply*)));
+                downloadManager->post(QNetworkRequest(url),
+                                      postData.toString().toUtf8());
             }
         }
         else
@@ -63,6 +69,20 @@ void SocketThread::disconnect()
 {
     emit disconnection(this);
     quit();
+}
+
+void SocketThread::replyFinished(QNetworkReply * reply)
+{
+    //Contains pour le moment : /n en trop je pense
+    // A remplacer par == après test
+    if(reply->readAll().contains("true"))
+    {
+        write("LOGGED");
+    }
+    else
+    {
+        write("BAD USERNAME OR PASSWORD");
+    }
 }
 
 QString SocketThread::read()

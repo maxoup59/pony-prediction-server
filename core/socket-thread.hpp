@@ -4,6 +4,8 @@
 #include <QThread>
 #include <QTcpSocket>
 #include "core/databasemanager.hpp"
+#include <QNetworkReply>
+
 class SocketThread : public QThread
 {
     Q_OBJECT
@@ -14,6 +16,7 @@ public:
 public slots:
     void readyRead();
     void disconnect();
+    void replyFinished(QNetworkReply*);
 signals:
     void disconnection(SocketThread*);
 private:
@@ -22,6 +25,7 @@ private:
     QString read();
     bool logged;
     DatabaseManager* databaseManager;
+                QNetworkAccessManager *downloadManager;
 };
 
 #endif // SOCKETTHREAD_H

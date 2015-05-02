@@ -9,5 +9,7 @@
 - [ ] Database
     - [x] Implement connection to the DB
     - [x] Implement userCheck
+    - [ ] get/save brain
+    - [ ] getData
 
             

@@ -14,15 +14,15 @@ DatabaseManager::~DatabaseManager()
 
 }
 
-bool DatabaseManager::checkUser(QString username, QString password)
+bool DatabaseManager::checkUser(QString username, QString hash)
 {
     if(connected)
     {
         QSqlQuery query;
-        QString statement = " SELECT COUNT(*) nb FROM User where userName='"
+        QString statement = " SELECT COUNT(*) nb FROM users where username='"
                 + username
-                + "' AND password='"
-                + password
+                + "' AND hash='"
+                + hash
                 + "';";
         query.prepare(statement);
         if(query.exec())

@@ -2,6 +2,7 @@
 #include "core/server.hpp"
 #include <iostream>
 #include "core/util.hpp"
+#include <signal.h>
 
 int main(int argc, char *argv[])
 {

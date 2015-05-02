@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QCoreApplication>
+#include <signal.h>
 
 Server * Util::server = nullptr;
 QCoreApplication *Util::app = nullptr;

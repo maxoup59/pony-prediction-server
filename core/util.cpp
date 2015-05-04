@@ -10,11 +10,12 @@
 
 Server * Util::server = nullptr;
 QCoreApplication *Util::app = nullptr;
+QString Util::configFilePath = "./conf.xml";
 
 QString Util::getLineFromConf(const QString &id)
 {
     QString output = "";
-    QFile file("./conf.xml");
+    QFile file(configFilePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         qDebug() << "Can not find the conf file in : " + QDir::currentPath();
@@ -42,6 +43,21 @@ void Util::init(QCoreApplication *pApp, Server * pServer)
     Util::app = pApp;
 }
 
+void Util::initConfigFilePath(QCoreApplication *pApp)
+{
+    if(pApp->arguments().value(1) == "-c")
+    {
+        if(pApp->arguments().value(2) != NULL)
+        {
+            configFilePath = pApp->arguments().value(2);
+        }
+        else
+        {
+            Util::log("Invalid use : -c pathToConfigFile");
+        }
+    }
+}
+
 void Util::log(QString message)
 {
     std::cout << message.toStdString() << std::endl;
@@ -50,8 +66,8 @@ void Util::log(QString message)
 void Util::catchUnixSignals(const std::vector<int>& quitSignals,
                             const std::vector<int>& ignoreSignals) {
     auto handler = [](int sig) ->void {
-        Util::app->quit();
         server->close();
+        Util::app->quit();
     };
     for ( int sig : ignoreSignals )
         signal(sig, SIG_IGN);

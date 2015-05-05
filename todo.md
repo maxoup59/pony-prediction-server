@@ -3,12 +3,13 @@
     - [x] conf.xml
     - [x] pathToConf with -c PathToConf
 - [ ] Client/Server
-    - [ ] Encryption communication between client and server
-    - [ ] Write communication protocol
-    - [ ] Upload/Download brains
+    - [ ] Encryption communication between client and server (QSSLSocket)
+    - [x] Write communication protocol
+    - [x] Upload/Download brains
     - [x] Log when incoming connection
     - [x] Catch CTRL+C to shutdown properly the server
     - [x] Identification with account created by the website
+    - [ ] Default value for Util::getLineConf
 - [ ] Database
     - [x] Implement connection to the DB
     - [x] Implement userCheck

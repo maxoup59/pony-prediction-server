@@ -3,6 +3,7 @@
     <username>username</username>
     <password>password</password>
     <databaseName>databaseName</databaseName>
+    <pathToSavedBrain>pathToSavedBrain</pathToSavedBrain>
     <ip>IP</ip>
     <port>50000</port>
 </conf>

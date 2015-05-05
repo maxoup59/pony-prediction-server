@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include "core/databasemanager.hpp"
 #include <QNetworkReply>
+#include <QFile>
 
 class SocketThread : public QThread
 {

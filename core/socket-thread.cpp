@@ -5,6 +5,8 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrlQuery>
+#include <QFile>
+
 SocketThread::SocketThread(int socketDescriptor,
                            DatabaseManager * pDatabaseManager):
     socketClient(new QTcpSocket()),logged(false)
@@ -42,6 +44,23 @@ void SocketThread::readyRead()
     {
         if(request == "HEY")
             write("Coucou");
+        else if(request == "getbrain")
+        {
+            QFile file(Util::getLineFromConf("pathToSavedBrain") +
+                       "braindownloaded.brain");
+            file.open(QIODevice::ReadOnly);
+            write("brain " + file.readAll());
+        }
+        else if(request.startsWith("sendbrain "))
+        {
+            QString brainXML = request.remove(0,10);
+            QFile brain(Util::getLineFromConf("pathToSavedBrain") +
+                        "uploadedbrain.brain");
+            brain.open(QIODevice::WriteOnly);
+            brain.write(brainXML.toUtf8());
+            brain.close();
+            write("brain received");
+        }
         else
         {
             write("wtf");
@@ -107,14 +126,11 @@ QString SocketThread::read()
 
 bool SocketThread::write(QString answer)
 {
-    QByteArray block;
     answer += "\r\n";
-    block.append(answer);
-    if(socketClient->write(block)!= -1)
+    if(socketClient->write(answer.toUtf8())!= -1)
     {
         return true;
     }
     else
         return false;
 }
-

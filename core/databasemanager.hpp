@@ -12,6 +12,7 @@ public:
     ~DatabaseManager();
     bool isConnected(){return connected;}
     QString getUserHash(QString username);
+    bool getUserConfirmation(QString username);
 private:
     bool connected;
     bool connect();

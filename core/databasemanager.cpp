@@ -18,29 +18,57 @@ DatabaseManager::~DatabaseManager()
 QString DatabaseManager::getUserHash(QString username)
 {
     if(connected)
+    {
+        QSqlQuery query;
+        QString statement = "Select hash from users where username ='"
+                + username
+                + "';";
+        query.prepare(statement);
+        if(query.exec())
         {
-            QSqlQuery query;
-            QString statement = "Select hash from users where username ='"
-                                + username
-                                + "';";
-            query.prepare(statement);
-            if(query.exec())
+            while(query.next())
             {
-                while(query.next())
+                QSqlRecord record = query.record();
+                if(!record.value(record.indexOf("hash")).isNull())
                 {
-                    QSqlRecord record = query.record();
-                    if(!record.value(record.indexOf("hash")).isNull())
-                    {
-                        return record.value(record.indexOf("hash")).toString();
-                    }
+                    return record.value(record.indexOf("hash")).toString();
                 }
             }
         }
-        else
-        {
-            Util::log("Not connected to the database");
-        }
+    }
+    else
+    {
+        Util::log("Not connected to the database");
+    }
     return QString();
+}
+
+bool DatabaseManager::getUserConfirmation(QString username)
+{
+    if(connected)
+    {
+        QSqlQuery query;
+        QString statement = "Select confirmed from users where username ='"
+                + username
+                + "';";
+        query.prepare(statement);
+        if(query.exec())
+        {
+            while(query.next())
+            {
+                QSqlRecord record = query.record();
+                if(!record.value(record.indexOf("confirmed")).isNull())
+                {
+                    return record.value(record.indexOf("confirmed")).toInt();
+                }
+            }
+        }
+    }
+    else
+    {
+        Util::log("Not connected to the database");
+    }
+    return false;
 }
 
 bool DatabaseManager::connect()

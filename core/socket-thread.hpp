@@ -17,7 +17,7 @@ public:
 public slots:
     void readyRead();
     void disconnect();
-    void replyFinished(QNetworkReply*);
+    void onPasswordCheckReply(QNetworkReply*);
 signals:
     void disconnection(SocketThread*);
 private:
@@ -26,7 +26,8 @@ private:
     QString read();
     bool logged;
     DatabaseManager* databaseManager;
-                QNetworkAccessManager *downloadManager;
+    QNetworkAccessManager *downloadManager;
+    QString username;
 };
 
 #endif // SOCKETTHREAD_H

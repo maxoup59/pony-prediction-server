@@ -59,7 +59,7 @@ void SocketThread::readyRead()
             brain.open(QIODevice::WriteOnly);
             brain.write(brainXML.toUtf8());
             brain.close();
-            write("brain received");
+            write("brainreceived");
         }
         else
         {
@@ -75,16 +75,21 @@ void SocketThread::readyRead()
             QStringList split = request.split(" ");
             if(split.length() >= 3)
             {
+                username = split[1];
                 QUrl url("http://"+Util::getLineFromConf("ip")
                          + "/php/scripts/check-password.php");
                 QUrlQuery postData;
                 postData.addQueryItem("hash",
-                                      databaseManager->getUserHash(split[1]));
+                                      databaseManager->getUserHash(username));
                 postData.addQueryItem("password", split[2]);
                 connect(downloadManager, SIGNAL(finished(QNetworkReply*)),
-                        this, SLOT(replyFinished(QNetworkReply*)));
+                        this, SLOT(onPasswordCheckReply(QNetworkReply*)));
                 downloadManager->post(QNetworkRequest(url),
                                       postData.toString().toUtf8());
+            }
+            else
+            {
+                write("wtf");
             }
         }
         else
@@ -99,15 +104,15 @@ void SocketThread::disconnect()
     quit();
 }
 
-void SocketThread::replyFinished(QNetworkReply * reply)
+void SocketThread::onPasswordCheckReply(QNetworkReply * reply)
 {
     QString answer = reply->readAll();
-    if(answer == "true")
+    if(answer == "true" && databaseManager->getUserConfirmation(username))
     {
         logged=true;
         write("welcome");
     }
-    else if(answer == "false")
+    else if(answer == "false" || !databaseManager->getUserConfirmation(username))
     {
         write("unicorn");
     }

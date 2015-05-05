@@ -7,6 +7,7 @@ class Util
 {
 public:
     static QString getLineFromConf(const QString & id);
+    static QString getLineFromFile(QString pathToFile,const QString & id);
     static void init(QCoreApplication *, Server * );
     static void log(QString);
     static void catchUnixSignals(const std::vector<int>&,

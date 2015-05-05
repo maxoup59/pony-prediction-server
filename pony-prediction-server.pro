@@ -20,13 +20,15 @@ SOURCES += main.cpp \
     core/server.cpp \
     core/socket-thread.cpp \
     core/util.cpp \
-    core/databasemanager.cpp
+    core/databasemanager.cpp \
+    core/user.cpp
 
 HEADERS += \
     core/server.hpp \
     core/socket-thread.hpp \
     core/util.hpp \
-    core/databasemanager.hpp
+    core/databasemanager.hpp \
+    core/user.hpp
 
 DISTFILES += \
     conf.xml

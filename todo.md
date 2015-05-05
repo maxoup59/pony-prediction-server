@@ -9,12 +9,11 @@
     - [x] Log when incoming connection
     - [x] Catch CTRL+C to shutdown properly the server
     - [x] Identification with account created by the website
-    - [ ] Default value for Util::getLineConf
 - [ ] Database
     - [x] Implement connection to the DB
     - [x] Implement userCheck
-    - [ ] get/save brain
-    - [ ] getData
+    - [x] get/save brain
+    - [ ] getData/getJob
     - [ ] QODBC instead of QMYSQL
 - [ ] Fix warning 
 

@@ -9,8 +9,7 @@
 
 SocketThread::SocketThread(int socketDescriptor,
                            DatabaseManager * pDatabaseManager):
-    socketClient(new QTcpSocket()),logged(false)
-  ,downloadManager()
+    socketClient(new QTcpSocket()),logged(false),downloadManager()
 {
     socketClient->setSocketDescriptor(socketDescriptor);
     databaseManager = pDatabaseManager;
@@ -44,12 +43,17 @@ void SocketThread::readyRead()
     {
         if(request == "HEY")
             write("Coucou");
-        else if(request == "getbrain")
+        else if(request.startsWith("getbrain "))
         {
+            int idJob = request.remove(0,9).toInt();
+            int idBestBrain = databaseManager->getIdBestBrain(idJob);
             QFile file(Util::getLineFromConf("pathToSavedBrain") +
-                       "braindownloaded.brain");
-            file.open(QIODevice::ReadOnly);
-            write("brain " + file.readAll());
+                       QString::number(idBestBrain) + ".brain");
+            if(file.exists())
+            {
+                file.open(QIODevice::ReadOnly);
+                write("brain " + file.readAll());
+            }
         }
         else if(request.startsWith("sendbrain "))
         {
@@ -59,6 +63,12 @@ void SocketThread::readyRead()
             brain.open(QIODevice::WriteOnly);
             brain.write(brainXML.toUtf8());
             brain.close();
+            QString fileName = Util::getLineFromConf("pathToSavedBrain") +
+                    "uploadedbrain.brain";
+            databaseManager->saveBrain(
+                        Util::getLineFromFile(fileName,"ratio").toDouble(),
+                        Util::getLineFromFile(fileName,"jobId").toInt(),
+                        user.getUserid());
             write("brainreceived");
         }
         else
@@ -75,12 +85,12 @@ void SocketThread::readyRead()
             QStringList split = request.split(" ");
             if(split.length() >= 3)
             {
-                username = split[1];
+                user.setUsername(split[1]);
                 QUrl url("http://"+Util::getLineFromConf("ip")
                          + "/php/scripts/check-password.php");
                 QUrlQuery postData;
                 postData.addQueryItem("hash",
-                                      databaseManager->getUserHash(username));
+                                      databaseManager->getUserHash(user.getUsername()));
                 postData.addQueryItem("password", split[2]);
                 connect(downloadManager, SIGNAL(finished(QNetworkReply*)),
                         this, SLOT(onPasswordCheckReply(QNetworkReply*)));
@@ -107,13 +117,17 @@ void SocketThread::disconnect()
 void SocketThread::onPasswordCheckReply(QNetworkReply * reply)
 {
     QString answer = reply->readAll();
-    if(answer == "true" && databaseManager->getUserConfirmation(username))
+    if(answer == "true" &&
+            databaseManager->getUserConfirmation(user.getUsername()))
     {
         logged=true;
         write("welcome");
+        user.setUserid(databaseManager->getUserId(user.getUsername()));
     }
-    else if(answer == "false" || !databaseManager->getUserConfirmation(username))
+    else if(answer == "false" ||
+            !databaseManager->getUserConfirmation(user.getUsername()))
     {
+        user.setUsername("");
         write("unicorn");
     }
     else

@@ -14,8 +14,13 @@ QString Util::configFilePath = "./conf.xml";
 
 QString Util::getLineFromConf(const QString &id)
 {
+    return getLineFromFile(configFilePath,id);
+}
+
+QString Util::getLineFromFile(QString pathToFile,const QString & id)
+{
     QString output = "";
-    QFile file(configFilePath);
+    QFile file(pathToFile);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         qDebug() << "Can not find the conf file in : " + QDir::currentPath();

@@ -6,6 +6,7 @@
 #include "core/databasemanager.hpp"
 #include <QNetworkReply>
 #include <QFile>
+#include <core/user.hpp>
 
 class SocketThread : public QThread
 {
@@ -27,7 +28,7 @@ private:
     bool logged;
     DatabaseManager* databaseManager;
     QNetworkAccessManager *downloadManager;
-    QString username;
+    User user;
 };
 
 #endif // SOCKETTHREAD_H

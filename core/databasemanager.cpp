@@ -71,6 +71,86 @@ bool DatabaseManager::getUserConfirmation(QString username)
     return false;
 }
 
+bool DatabaseManager::saveBrain(float ratio, int jobId, int userId)
+{
+    bool retour = false;
+    if(connected)
+    {
+        QSqlQuery query;
+        QString statement = "INSERT INTO brains(ratio,jobId,userId) "
+                            "VALUES(:ratio,:jobId,:userId);";
+
+        query.prepare(statement);
+        query.bindValue(":ratio",ratio);
+        query.bindValue(":jobId",jobId);
+        query.bindValue(":userId",userId);
+        if(!query.exec())
+        {
+            retour = true;
+            Util::log("Error when saving brain");
+        }
+    }
+    else
+    {
+        Util::log("Not connected to the database");
+    }
+    return retour;
+}
+
+int DatabaseManager::getUserId(QString username)
+{
+    if(connected)
+    {
+        QSqlQuery query;
+        QString statement = "Select id from users where username "
+                            "= :username;";
+        query.prepare(statement);
+        query.bindValue(":username",username);
+        if(query.exec())
+        {
+            while(query.next())
+            {
+                QSqlRecord record = query.record();
+                if(!record.value(record.indexOf("id")).isNull())
+                {
+                    return record.value(record.indexOf("id")).toInt();
+                }
+            }
+        }
+    }
+    else
+    {
+        Util::log("Not connected to the database");
+    }
+    return -1;
+}
+
+int DatabaseManager::getIdBestBrain(int idJob)
+{
+    if(connected)
+    {
+        QSqlQuery query;
+        QString statement = "Select idBestBrain from jobs;";
+        query.prepare(statement);
+        if(query.exec())
+        {
+            while(query.next())
+            {
+                QSqlRecord record = query.record();
+                if(!record.value(record.indexOf("idBestBrain")).isNull())
+                {
+                    return record.value(record.indexOf("idBestBrain")).toInt();
+                }
+            }
+        }
+    }
+    else
+    {
+        Util::log("Not connected to the database");
+    }
+    return -1;
+}
+
 bool DatabaseManager::connect()
 {
     bool ok = true;

@@ -11,7 +11,13 @@ int main(int argc, char *argv[])
     Util::initConfigFilePath(&a);
     Server server;
     Util::init(&a,&server);
+
+#ifdef  _WIN32
+    Util::log("Cannot handle ctrl+C : you're on windows... Sucker !");
+#else
     Util::catchUnixSignals({SIGQUIT, SIGINT, SIGTERM, SIGHUP});
+#endif
+
     if (!server.listen(QHostAddress::Any,
                        Util::getLineFromConf("port").toInt())) {
         Util::log("Unable to start the server: " + server.errorString());

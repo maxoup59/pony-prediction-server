@@ -17,7 +17,10 @@ int main(int argc, char *argv[])
         Util::log("Unable to start the server: " + server.errorString());
         return 0;
     }
-    Util::log("Server started on : " +
-              QString::number(server.serverPort()) + " !");
+    else
+    {
+        Util::log("Server started on : " +
+                  QString::number(server.serverPort()) + " !");
+    }
     return a.exec();
 }

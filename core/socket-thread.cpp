@@ -12,6 +12,7 @@ SocketThread::SocketThread(int socketDescriptor,
 {
     socketClient->setSocketDescriptor(socketDescriptor);
     databaseManager = pDatabaseManager;
+    write("hi");
 }
 
 SocketThread::~SocketThread()
@@ -31,26 +32,32 @@ void SocketThread::run()
 void SocketThread::readyRead()
 {
     QString request = read();
-    if(logged)
+    Util::log(request);
+    if (request == "exit")
+    {
+        write("bye");
+        disconnect();
+    }
+    else if(logged)
     {
         if(request == "HEY")
             write("Coucou");
+        else
+        {
+            write("wtf");
+        }
     }
     else
     {
-        if (request == "QUIT")
+        if(request.startsWith("log"))
         {
-            write("DISCONNECTED");
-            disconnect();
-        }
-        else if(request.startsWith("LOG"))
-        {
-            downloadManager = new QNetworkAccessManager;
+            delete downloadManager;
+            downloadManager = new QNetworkAccessManager();
             QStringList split = request.split(" ");
             if(split.length() >= 3)
             {
-                //QUrl url("http://ponyprediction.loicbourgois.com/php/scripts/check-password.php");
-                QUrl url("http://localhost/passwordcheck.php");
+                QUrl url("http://"+Util::getLineFromConf("ip")
+                         + "/php/scripts/check-password.php");
                 QUrlQuery postData;
                 postData.addQueryItem("hash",
                                       databaseManager->getUserHash(split[1]));
@@ -63,7 +70,7 @@ void SocketThread::readyRead()
         }
         else
         {
-            write("999");
+            write("wtf");
         }
     }
 }
@@ -79,17 +86,16 @@ void SocketThread::replyFinished(QNetworkReply * reply)
     if(answer == "true")
     {
         logged=true;
-        write("LOGGED");
+        write("welcome");
     }
     else if(answer == "false")
     {
-        write("BAD USERNAME OR PASSWORD");
+        write("unicorn");
     }
     else
     {
         write("Unknown error");
     }
-    delete downloadManager;
 }
 
 QString SocketThread::read()
@@ -101,11 +107,13 @@ QString SocketThread::read()
 
 bool SocketThread::write(QString answer)
 {
-    answer+="\n";
     QByteArray block;
+    answer += "\r\n";
     block.append(answer);
     if(socketClient->write(block)!= -1)
+    {
         return true;
+    }
     else
         return false;
 }

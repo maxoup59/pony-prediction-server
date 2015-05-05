@@ -1,10 +1,11 @@
 # TODO 
 - [ ] Usefull features 
-    - [ ] conf.xml
+    - [x] conf.xml
     - [x] pathToConf with -c PathToConf
 - [ ] Client/Server
     - [ ] Encryption communication between client and server
     - [ ] Write communication protocol
+    - [ ] Upload/Download brains
     - [x] Log when incoming connection
     - [x] Catch CTRL+C to shutdown properly the server
     - [x] Identification with account created by the website

@@ -29,4 +29,4 @@ HEADERS += \
     core/databasemanager.hpp
 
 DISTFILES += \
-    config.xml
+    conf.xml

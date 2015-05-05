@@ -2,6 +2,7 @@
 #define UTIL_H
 #include "server.hpp"
 #include <QCoreApplication>
+
 class Util
 {
 public:

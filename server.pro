@@ -8,7 +8,7 @@ QT       += core network sql
 
 QT       -= gui
 
-TARGET = pony-prediction-server
+TARGET = server
 CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG += c++11
